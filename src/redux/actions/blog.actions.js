@@ -10,8 +10,8 @@ const getSingleBlog = (blog_id) => async (dispatch) => {
     let url = `/blogs/${blog_id}`;
     const response = await api.get(url);
 
-    if (response.success) {
-      const data = response.data;
+    if (response.status === 200) {
+      const data = response.data.data;
       dispatch({ type: types.GET_BLOG_DETAIL_SUCCESS, payload: data });
     }
   } catch (error) {
