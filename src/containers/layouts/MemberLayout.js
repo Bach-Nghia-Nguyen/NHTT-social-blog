@@ -3,12 +3,12 @@ import { Switch, Route } from "react-router-dom";
 
 import ProfilePage from "../../pages/ProfilePage";
 
-const AdminLayout = () => {
+const MemberLayout = () => {
   return (
     <Switch>
-      <Route exact path="/admin/profile" component={ProfilePage} />
+      <Route exact path="/member/profile" component={ProfilePage} />
     </Switch>
   );
 };
 
-export default AdminLayout;
+export default MemberLayout;

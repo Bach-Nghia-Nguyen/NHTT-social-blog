@@ -18,9 +18,7 @@ const RegisterPage = () => {
   const redirectTo = useSelector((state) => state.route.redirectTo);
 
   const handleChange = (e) => {
-    let data = { ...formData, [e.target.name]: e.target.value };
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(data);
   };
 
   const handleSubmit = (e) => {
@@ -31,9 +29,7 @@ const RegisterPage = () => {
       console.log("Passwords do not match");
       return;
     } else {
-      dispatch(
-        authActions.register({ name, email, password, password2, avatarUrl })
-      );
+      dispatch(authActions.register({ name, email, password, avatarUrl }));
     }
   };
 

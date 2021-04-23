@@ -5,7 +5,7 @@ const redirect = (link) => (dispatch) => {
 };
 
 const removeRedirectTo = () => (dispatch) => {
-  dispatch({ type: types.REMOVE_REDIRECT_TO, payload: null });
+  dispatch({ type: types.REMOVE_REDIRECT_TO });
 };
 
 export const routeActions = { redirect, removeRedirectTo };
