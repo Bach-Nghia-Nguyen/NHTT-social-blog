@@ -1,20 +1,21 @@
 import React from "react";
-import { Switch, Route } from "react-router";
+import { Switch, Route } from "react-router-dom";
 
 import HomePage from "../../pages/HomePage";
 import LoginPage from "../../pages/LoginPage";
 import RegisterPage from "../../pages/RegisterPage";
+import BlogDetailPage from "../../pages/BlogDetailPage";
+import NotFoundPage from "../../pages/NotFoundPage";
 
 const PublicLayout = () => {
   return (
-    <div>
-      <h1>Public</h1>
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/register" component={RegisterPage} />
-      </Switch>
-    </div>
+    <Switch>
+      <Route exact path="/" component={HomePage} />
+      <Route exact path="/login" component={LoginPage} />
+      <Route exact path="/register" component={RegisterPage} />
+      <Route exact path="blogs/:id" component={BlogDetailPage} />
+      <Route component={NotFoundPage} />
+    </Switch>
   );
 };
 

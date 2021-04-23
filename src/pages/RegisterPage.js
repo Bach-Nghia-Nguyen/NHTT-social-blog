@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { authActions } from "../redux/actions/auth.actions";
+import { routeActions } from "../redux/actions/route.actions";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +13,9 @@ const RegisterPage = () => {
     password2: "",
     avatarUrl: "",
   });
+  const history = useHistory();
   const dispatch = useDispatch();
+  const redirectTo = useSelector((state) => state.route.redirectTo);
 
   const handleChange = (e) => {
     let data = { ...formData, [e.target.name]: e.target.value };
@@ -26,9 +31,18 @@ const RegisterPage = () => {
       console.log("Passwords do not match");
       return;
     } else {
-      dispatch();
+      dispatch(
+        authActions.register({ name, email, password, password2, avatarUrl })
+      );
     }
   };
+
+  useEffect(() => {
+    if (redirectTo) {
+      history.push(redirectTo);
+      dispatch(routeActions.removedRedirectTo());
+    }
+  }, [redirectTo, history, dispatch]);
 
   return (
     <div className="pages">
