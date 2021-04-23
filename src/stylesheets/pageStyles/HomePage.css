@@ -1,0 +1,9 @@
+/*=====================
+  Home Page styles
+======================*/
+.home-page {
+  border: 2px solid saddlebrown;
+  background-color: springgreen;
+  height: 100vh;
+  margin-top: 80px;
+}
