@@ -258,6 +258,14 @@ nav .icon-burger .line {
 }
 
 /*=====================
+  General Pages styles
+======================*/
+.pages {
+  height: 100vh;
+  margin-top: 80px;
+}
+
+/*=====================
   Home Page styles
 ======================*/
 .home-page {

@@ -2,7 +2,7 @@ import React from "react";
 
 const BlogEditorPage = () => {
   return (
-    <div>
+    <div className="pages">
       <h1> Editor of blog content</h1>
     </div>
   );
