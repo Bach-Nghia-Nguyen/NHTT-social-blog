@@ -27,6 +27,30 @@ const updateBlog = () => (dispatch) => {};
 
 const deleteBlog = () => (dispatch) => {};
 
+const sendEmojiReaction = ({ targetType, target_id, emoji }) => async (
+  dispatch
+) => {
+  try {
+    dispatch({ type: types.SEND_REACTION_REQUEST, payload: null });
+    const response = await api.post(`/reactions`, {
+      targetType,
+      target_id,
+      emoji,
+    });
+    const data = response.data;
+
+    if (targetType === "Blog") {
+      dispatch({ type: types.BLOG_REACTION_SUCCESS, payload: data });
+    }
+
+    if (targetType === "Review") {
+      dispatch({ type: types.REVIEW_REACTION_SUCCESS });
+    }
+  } catch (error) {
+    dispatch({ type: types.SEND_REACTION_FAILURE, payload: error.message });
+  }
+};
+
 export const blogActions = {
   getBlogs,
   getSingleBlog,
@@ -34,4 +58,5 @@ export const blogActions = {
   createBlog,
   updateBlog,
   deleteBlog,
+  sendEmojiReaction,
 };

@@ -41,3 +41,8 @@ This is a social blog application project, created with React, React Router Redu
 - Redux, React redux, redux thunk, redux devtools extension
 - React toastify
 - Axios
+- @fortawesome/fontawesome-svg-core
+- @fortawesome/free-solid-svg-icons
+- @fortawesome/react-fontawesome
+- moment, react-moment
+- react-markdown
