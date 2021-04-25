@@ -18,7 +18,7 @@ const register = (data) => async (dispatch) => {
   }
 };
 
-const login = () => (dispatch) => {};
+const login = (email, password) => async (dispatch) => {};
 
 const logout = () => (dispatch) => {};
 

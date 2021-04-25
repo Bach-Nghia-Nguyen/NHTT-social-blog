@@ -5,6 +5,7 @@ const initialState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  accessToken: localStorage.getItem("accessToken"),
 };
 
 const authReducers = (state = initialState, action) => {
@@ -17,12 +18,14 @@ const authReducers = (state = initialState, action) => {
       break;
 
     case types.LOGIN_SUCCESS:
-      state.user = payload;
-      state.isAuthenticated = true;
-      state.error = null;
-      state.loading = false;
-      break;
-
+      localStorage.setItem("accessToken", payload.accessToken);
+      return {
+        ...state,
+        user: { ...payload.data },
+        accessToken: payload.accessToken,
+        loading: false,
+        isAuthenticated: true,
+      };
     case types.REGISTER_SUCCESS:
       state.loading = false;
       console.log("Successful");
