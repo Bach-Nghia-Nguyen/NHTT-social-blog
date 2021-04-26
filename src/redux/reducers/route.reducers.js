@@ -12,7 +12,7 @@ const routeReducers = (state = initialState, action) => {
       state.redirectTo = payload;
       break;
 
-    case types.REMOVE_REDIRECT_TO:
+    case "REMOVE_REDIRECT_TO":
       state.redirectTo = null;
       break;
 

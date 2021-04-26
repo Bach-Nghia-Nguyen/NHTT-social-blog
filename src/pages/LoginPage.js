@@ -35,7 +35,7 @@ const LoginPage = () => {
     <div className="text-center pages login-box">
       <Form onSubmit={handleSubmit}>
         <h3>LOG IN</h3>
-        <Form.Group controlId="formBasicEmail">
+        {/* <Form.Group controlId="formBasicEmail">
           <Form.Label>User Name</Form.Label>
           <Form.Control
             type="text"
@@ -44,7 +44,7 @@ const LoginPage = () => {
             onChange={handleChange}
             style={{ width: "300px" }}
           />
-        </Form.Group>
+        </Form.Group> */}
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
@@ -52,6 +52,7 @@ const LoginPage = () => {
             placeholder="Enter email"
             name="email"
             onChange={handleChange}
+            style={{ width: "300px" }}
           />
         </Form.Group>
         <Form.Group controlId="formBasicPassword">

@@ -37,7 +37,7 @@ const RegisterPage = () => {
   useEffect(() => {
     if (redirectTo) {
       history.push(redirectTo);
-      dispatch(routeActions.removedRedirectTo());
+      dispatch(routeActions.removeRedirectTo());
     }
   }, [redirectTo, history, dispatch]);
 

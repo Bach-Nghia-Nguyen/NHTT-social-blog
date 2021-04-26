@@ -11,9 +11,10 @@ const NavigationBar = () => {
   const history = useHistory();
   const redirectTo = useSelector((state) => state.route.redirectTo);
   const accessToken = localStorage.getItem("accessToken");
+  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(authActions.logoutRequest());
+    dispatch(authActions.logout());
   };
   useEffect(() => {
     if (redirectTo) {
@@ -28,12 +29,19 @@ const NavigationBar = () => {
       <img src={logo} alt="Logo" className="logo" width="80px" />
 
       <ul className="links">
-        {accessToken && accessToken ? (
-          <li>
-            <Link className="a-link" to="/" onClick={handleSubmit}>
-              Logout
-            </Link>
-          </li>
+        {accessToken ? (
+          <>
+            <li>
+              <Link className="a-link" to="/member/profile">
+                Profile
+              </Link>
+            </li>
+            <li>
+              <Link className="a-link" to="/" onClick={handleSubmit}>
+                Logout
+              </Link>
+            </li>
+          </>
         ) : (
           <>
             <li>
@@ -43,7 +51,7 @@ const NavigationBar = () => {
             </li>
             <li>
               <Link className="a-link" to="/register">
-                Regiter
+                Register
               </Link>
             </li>
             <li>

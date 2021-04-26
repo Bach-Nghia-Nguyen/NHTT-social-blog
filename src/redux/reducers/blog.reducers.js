@@ -17,6 +17,8 @@ const blogReducers = (state = initialState, action) => {
   switch (type) {
     case types.GET_BLOGS_REQUEST:
     case types.GET_BLOG_DETAIL_REQUEST:
+    case types.CREATE_BLOG_REQUEST:
+    case types.UPDATE_BLOG_REQUEST:
     case types.DELETE_BLOG_REQUEST:
       state.loading = true;
       state.error = null;
@@ -35,6 +37,15 @@ const blogReducers = (state = initialState, action) => {
       break;
 
     case types.GET_BLOG_DETAIL_SUCCESS:
+      state.selectedBlog = payload;
+      state.loading = false;
+      break;
+
+    case types.CREATE_BLOG_SUCCESS:
+      state.loading = false;
+      break;
+
+    case types.UPDATE_BLOG_SUCCESS:
       state.selectedBlog = payload;
       state.loading = false;
       break;
@@ -64,6 +75,8 @@ const blogReducers = (state = initialState, action) => {
 
     case types.GET_BLOGS_FAILURE:
     case types.GET_BLOG_DETAIL_FAILURE:
+    case types.CREATE_BLOG_FAILURE:
+    case types.UPDATE_BLOG_FAILURE:
     case types.DELETE_BLOG_FAILURE:
       state.error = payload;
       state.loading = false;

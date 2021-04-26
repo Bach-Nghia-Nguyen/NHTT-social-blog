@@ -14,6 +14,7 @@ const authReducers = (state = initialState, action) => {
   switch (type) {
     case types.LOGIN_REQUEST:
     case types.REGISTER_REQUEST:
+    case types.GET_REAL_CURRENT_USER_REQUEST:
       state.loading = true;
       state.error = null;
       break;
@@ -31,9 +32,15 @@ const authReducers = (state = initialState, action) => {
       console.log("Successful");
       break;
 
+    case types.GET_REAL_CURRENT_USER_SUCCESS:
+      state.user = payload;
+      state.isAuthenticated = true;
+      state.loading = false;
+      break;
+
     case types.LOGIN_FAILURE:
+    case types.GET_REAL_CURRENT_USER_FAILURE:
       state.error = payload;
-      state.user = null;
       state.isAuthenticated = false;
       state.loading = false;
       break;
@@ -41,6 +48,11 @@ const authReducers = (state = initialState, action) => {
     case types.REGISTER_FAILURE:
       state.error = payload;
       state.loading = false;
+      break;
+
+    case types.LOGOUT:
+      state.accessToken = null;
+      localStorage.clear();
       break;
 
     default:

@@ -20,10 +20,8 @@ const getSingleBlog = (blog_id) => async (dispatch) => {
     let url = `/blogs/${blog_id}`;
     const response = await api.get(url);
 
-    if (response.status === 200) {
-      const data = response.data.data;
-      dispatch({ type: types.GET_BLOG_DETAIL_SUCCESS, payload: data });
-    }
+    const data = response.data.data;
+    dispatch({ type: types.GET_BLOG_DETAIL_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: types.GET_BLOG_DETAIL_FAILURE, payload: error.message });
   }
@@ -42,9 +40,52 @@ const createReview = (blog_id, reviewText) => async (dispatch) => {
   }
 };
 
-const createBlog = () => (dispatch) => {};
+const createBlog = (title, content, images) => async (dispatch) => {
+  dispatch({ type: types.CREATE_BLOG_REQUEST, payload: null });
+  try {
+    // For uploading file manually
+    // const formData = new FormData();
+    // formData.append("title", title);
+    // formData.append("content", content);
+    // if (images && images.length) {
+    //   for (let index = 0; index < images.length; index++) {
+    //     formData.append("images", images[index]);
+    //   }
+    // }
+    // const res = await api.post("/blogs", formData);
 
-const updateBlog = () => (dispatch) => {};
+    // Upload images using cloudinary already
+    const res = await api.post("/blogs", { title, content, images });
+
+    dispatch({
+      type: types.CREATE_BLOG_SUCCESS,
+      payload: res.data.data,
+    });
+    dispatch(routeActions.redirect("__GO_BACK__"));
+    toast.success("New blog has been created!");
+  } catch (error) {
+    dispatch({ type: types.CREATE_BLOG_FAILURE, payload: error });
+  }
+};
+
+const updateBlog = (blogId, title, content, images) => async (dispatch) => {
+  dispatch({ type: types.UPDATE_BLOG_REQUEST, payload: null });
+  try {
+    // let formData = new FormData();
+    // formData.set("title", title);
+    // formData.set("content", content);
+    const res = await api.put(`/blogs/${blogId}`, { title, content, images });
+
+    dispatch({
+      type: types.UPDATE_BLOG_SUCCESS,
+      payload: res.data.data,
+    });
+    dispatch(routeActions.redirect("__GO_BACK__"));
+    toast.success("The blog has been updated!");
+  } catch (error) {
+    dispatch({ type: types.UPDATE_BLOG_FAILURE, payload: error });
+  }
+};
 
 const deleteBlog = (blog_id) => async (dispatch) => {
   dispatch({ type: types.DELETE_BLOG_REQUEST, payload: null });

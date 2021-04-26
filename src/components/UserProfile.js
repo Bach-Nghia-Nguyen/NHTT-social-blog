@@ -38,9 +38,16 @@ const UserProfile = () => {
   return (
     <div className="text-center">
       <img
-        src={`${userData?.avatarUrl}`}
+        src={`${
+          userData?.avatarUrl
+            ? userData?.avatarUrl
+            : "https://i.pinimg.com/originals/6e/58/9a/6e589a76e6403015819eacb830756c4a.png"
+        }`}
         alt=""
-        style={{ width: "250px", borderRadius: "50%" }}
+        style={{
+          width: "250px",
+          borderRadius: "50%",
+        }}
       />
       <h1 style={{ marginTop: "7px" }}>{userData?.name}</h1>
       <h5>email: {userData?.email}</h5>

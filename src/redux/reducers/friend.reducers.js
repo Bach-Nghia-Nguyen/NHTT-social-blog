@@ -44,8 +44,8 @@ const friendReducer = (state = initialState, action) => {
     case types.ACCEPT_FRIEND_REQUEST_SUCCESS:
       return {
         ...state,
-        newloading: state.newLoading + 1,
         loading: false,
+        newLoading: state.newLoading + 1,
       };
 
     case types.GET_ALL_USERS_SUCCESS:

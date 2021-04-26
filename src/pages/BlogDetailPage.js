@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { blogActions } from "../redux/actions/blog.actions";
@@ -14,7 +14,7 @@ import ReviewForm from "../components/ReviewForm";
 
 const BlogDetailPage = () => {
   const params = useParams();
-  const { id } = params;
+
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -24,7 +24,16 @@ const BlogDetailPage = () => {
   const submitLoading = useSelector((state) => state.blog.submitLoading);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
+  console.log("....", currentUser);
+  console.log(blog?.author._id);
   const [reviewText, setReviewText] = useState("");
+
+  useEffect(() => {
+    if (params?.id) {
+      console.log("hellooo");
+      dispatch(blogActions.getSingleBlog(params.id));
+    }
+  }, [dispatch, params]);
 
   const handleInputChange = (e) => {
     setReviewText(e.target.value);
@@ -32,7 +41,7 @@ const BlogDetailPage = () => {
 
   const handleReviewSubmit = (e) => {
     e.preventDefault();
-    dispatch(blogActions.createReview(id, reviewText));
+    dispatch(blogActions.createReview(params.id, reviewText));
     setReviewText("");
   };
 
@@ -40,80 +49,79 @@ const BlogDetailPage = () => {
     history.goBack();
   };
 
-  useEffect(() => {
-    if (id) {
-      console.log("hellooo");
-      dispatch(blogActions.getSingleBlog(id));
-    }
-  }, [dispatch, id]);
-
   return (
     <div className="pages">
-      <h1>The detail of a blog goes here</h1>
+      <Container>
+        <div className="d-flex justify-content-between">
+          <Button onClick={handleGoBack}>
+            <FontAwesomeIcon icon="chevron-left" size="1x" /> Back
+          </Button>
 
-      <div className="d-flex justify-content-between">
-        <Button onClick={handleGoBack}>
-          <FontAwesomeIcon icon="chevron-left" size="1x" /> Back
-        </Button>
+          {/* Blog Edit button */}
+          {blog?._id && currentUser?._id === blog?.author?._id ? (
+            <Link to={`/blog/edit/${blog._id}`}>
+              <Button variant="success">
+                <FontAwesomeIcon icon="edit" size="1x" /> Edit
+              </Button>
+            </Link>
+          ) : (
+            <></>
+          )}
+        </div>
 
-        {/* Blog Edit button goes here */}
-        {blog?._id && currentUser?._id === blog?.author?._id ? (
-          <Link to={`/blog/edit/${blog._id}`}>
-            <Button variant="success">
-              <FontAwesomeIcon icon="edit" size="1x" /> Edit
-            </Button>
-          </Link>
+        {/* Blog detail section */}
+        {loading ? (
+          <Loader />
         ) : (
-          <></>
-        )}
-      </div>
+          <>
+            {blog && (
+              <div className="mb-5">
+                <h4>{blog.title}</h4>
 
-      {/* Blog detail section */}
-      {loading ? (
-        <Loader />
-      ) : (
-        <>
-          {blog && (
-            <div className="mb-5">
-              <h4>{blog.title}</h4>
+                {blog.images && (
+                  <img
+                    src={blog.images[0]}
+                    alt="blog"
+                    style={{ maxWidth: "500px" }}
+                  />
+                )}
 
-              {blog.images && <img src={blog.images[0]} alt="blog" />}
+                <span className="text-muted">
+                  @{blog.author?.name} wrote
+                  <Moment fromNow>{blog.createdAt}</Moment>
+                </span>
 
-              <span className="text-muted">
-                @{blog.author?.name} wrote
-                <Moment fromNow>{blog.createdAt}</Moment>
-              </span>
+                <hr />
 
-              <hr />
+                {blog.content && <Markdown source={blog.content} />}
 
-              {blog.content && <Markdown source={blog.content} />}
+                <hr />
 
-              <hr />
+                <Reactions
+                  reactionsData={blog.reactions}
+                  targetType="Blog"
+                  targetId={blog._id}
+                  size="lg"
+                />
 
-              <Reactions
-                reactionsData={blog.reactions}
-                targetType="Blog"
-                targetId={blog._id}
-                size="lg"
+                <hr />
+
+                <Reviews reviews={blog.reviews} />
+              </div>
+            )}
+
+            {/* Review Creation Form*/}
+            {isAuthenticated && (
+              <ReviewForm
+                reviewText={reviewText}
+                handleInputChange={handleInputChange}
+                handleReviewSubmit={handleReviewSubmit}
+                loading={submitLoading}
               />
-
-              <hr />
-
-              <Reviews reviews={blog.reviews} />
-            </div>
-          )}
-
-          {/* Review Creation Form*/}
-          {isAuthenticated && (
-            <ReviewForm
-              reviewText={reviewText}
-              handleInputChange={handleInputChange}
-              handleReviewSubmit={handleReviewSubmit}
-              loading={submitLoading}
-            />
-          )}
-        </>
-      )}
+            )}
+          </>
+        )}
+      </Container>
     </div>
   );
 };

@@ -22,10 +22,10 @@ const login = ({ email, password }) => async (dispatch) => {
   dispatch({ type: types.LOGIN_REQUEST, payload: null });
   try {
     const res = await api.post(`/auth/login`, { email, password });
-    dispatch(routeActions.redirect("/"));
     dispatch({ type: types.LOGIN_SUCCESS, payload: res.data.data });
-    api.defaults.headers.common["authorization"] =
+    api.defaults.headers["authorization"] =
       "Bearer " + res.data.data.accessToken;
+    dispatch(routeActions.redirect("/"));
     const userName = `${res.data.data.user.name}`;
     toast.success(`Welcome, ${userName}`);
   } catch (error) {
@@ -43,4 +43,21 @@ const logout = () => (dispatch) => {
   }
 };
 
-export const authActions = { register, login, logout };
+const getRealCurrentUser = (accessToken) => async (dispatch) => {
+  dispatch({ type: types.GET_REAL_CURRENT_USER_REQUEST, payload: null });
+
+  // const bearerToken = "Bearer " + accessToken;
+  // api.defaults.headers["authorization"] = bearerToken;
+
+  try {
+    const res = await api.get("/users/me");
+    dispatch({
+      type: types.GET_REAL_CURRENT_USER_SUCCESS,
+      payload: res.data.data,
+    });
+  } catch (error) {
+    dispatch({ type: types.GET_REAL_CURRENT_USER_FAILURE, payload: error });
+  }
+};
+
+export const authActions = { register, login, logout, getRealCurrentUser };

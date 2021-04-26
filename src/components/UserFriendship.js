@@ -14,7 +14,6 @@ import {
   faTimes,
   faPauseCircle,
 } from "@fortawesome/free-solid-svg-icons";
-// import { RingLoader } from "react-spinners/RingLoader";
 
 const UserFriendship = () => {
   const [key, setKey] = useState("allUser");
@@ -46,11 +45,11 @@ const UserFriendship = () => {
     } else if (key === "home") {
       history.push("/");
     }
-  }, [key, pageNum, dispatch, history, newLoading]);
+  }, [key, pageNum, dispatch, newLoading, history]);
 
-  if (loading === true) {
-    return <h1 className="text-center">Loading......</h1>;
-  }
+  // if (loading === true) {
+  //   return <h1 className="text-center">Loading......</h1>;
+  // }
 
   return (
     <>
