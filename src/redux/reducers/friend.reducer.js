@@ -4,6 +4,7 @@ const initialState = {
   allFriend: null,
   loading: false,
   error: null,
+  newLoading: 0,
 };
 const friendReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -44,6 +45,7 @@ const friendReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
+        newLoading: state.newLoading + 1,
       };
 
     case types.GET_ALL_USERS_SUCCESS:

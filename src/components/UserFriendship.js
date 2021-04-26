@@ -14,7 +14,6 @@ import {
   faTimes,
   faPauseCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { RingLoader } from "react-spinners/RingLoader";
 
 const UserFriendship = () => {
   const [key, setKey] = useState("allUser");
@@ -23,6 +22,7 @@ const UserFriendship = () => {
   const totalPageNum = allFriendData?.totalPages;
   const allFriend = allFriendData?.users;
   const [pageNum, setPageNum] = useState(1);
+  const newLoading = useSelector((state) => state.friend.newLoading);
   const defaultAvatar =
     "https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png";
   console.log("all allFriendData", allFriendData);
@@ -45,213 +45,229 @@ const UserFriendship = () => {
     } else if (key === "home") {
       history.push("/");
     }
-  }, [key, pageNum, dispatch, allFriendData?.friendship]);
+  }, [key, pageNum, dispatch, newLoading]);
 
-  if (loading === true) {
-    return <h1 className="text-center">Loading......</h1>;
-  }
+  // if (loading === true) {
+  //   return <h1 className="text-center">Loading......</h1>;
+  // }
 
   return (
     <>
-      <Tabs activeKey={key} onSelect={(k) => setKey(k)} variant="pills">
-        <Tab eventKey="allUser" title="All User">
-          <Table striped bordered hover variant="dark">
-            <thead>
-              <tr>
-                <th>Avatar</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allFriend?.map((friend) => {
-                return (
+      {loading ? (
+        <h1 className="text-center">Loading...</h1>
+      ) : (
+        <div>
+          <Tabs activeKey={key} onSelect={(k) => setKey(k)} variant="pills">
+            <Tab eventKey="allUser" title="All User">
+              <Table striped bordered hover variant="dark">
+                <thead>
                   <tr>
-                    <td>
-                      <img
-                        src={`${
-                          !friend.avatarUrl ? defaultAvatar : friend.avatarUrl
-                        }`}
-                        style={{ borderRadius: "50%", height: "70px" }}
-                      />
-                    </td>
-                    <td>{friend?.name}</td>
-                    <td>{friend?.email}</td>
-                    <td>
-                      {!friend.friendship ||
-                      friend?.friendship.status === "cancel" ? (
-                        <Button
-                          variant="outline-primary"
-                          onClick={() => {
-                            dispatch(
-                              friendActions.sendFriendRequest(friend._id)
-                            );
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faUserPlus} /> Add Friend
-                        </Button>
-                      ) : friend?.friendship.status === "requesting" ? (
-                        <h5>
-                          <Badge pill variant="warning">
-                            <FontAwesomeIcon icon={faPauseCircle} />
-                            Requesting
-                          </Badge>
-                        </h5>
-                      ) : (
-                        <h5>
-                          <Badge pill variant="success">
-                            <FontAwesomeIcon icon={faCheck} /> Friend
-                          </Badge>
-                        </h5>
-                      )}
-                    </td>
+                    <th>Avatar</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </Tab>
-        <Tab eventKey="sent" title="Sent Requsets">
-          <Table striped bordered hover variant="dark">
-            <thead>
-              <tr>
-                <th>Avatar</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allFriend?.map((friend) => {
-                return (
+                </thead>
+                <tbody>
+                  {allFriend?.map((friend) => {
+                    return (
+                      <tr>
+                        <td>
+                          <img
+                            src={`${
+                              !friend.avatarUrl
+                                ? defaultAvatar
+                                : friend.avatarUrl
+                            }`}
+                            style={{ borderRadius: "50%", height: "70px" }}
+                          />
+                        </td>
+                        <td>{friend?.name}</td>
+                        <td>{friend?.email}</td>
+                        <td>
+                          {!friend.friendship ||
+                          friend?.friendship.status === "cancel" ? (
+                            <Button
+                              variant="outline-primary"
+                              onClick={() => {
+                                dispatch(
+                                  friendActions.sendFriendRequest(friend._id)
+                                );
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faUserPlus} /> Add Friend
+                            </Button>
+                          ) : friend?.friendship.status === "requesting" ? (
+                            <h5>
+                              <Badge pill variant="warning">
+                                <FontAwesomeIcon icon={faPauseCircle} />
+                                Requesting
+                              </Badge>
+                            </h5>
+                          ) : (
+                            <h5>
+                              <Badge pill variant="success">
+                                <FontAwesomeIcon icon={faCheck} /> Friend
+                              </Badge>
+                            </h5>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </Tab>
+            <Tab eventKey="sent" title="Sent Requsets">
+              <Table striped bordered hover variant="dark">
+                <thead>
                   <tr>
-                    <td>
-                      <img
-                        src={`${
-                          !friend.avatarUrl ? defaultAvatar : friend.avatarUrl
-                        }`}
-                        style={{ borderRadius: "50%", height: "70px" }}
-                      />
-                    </td>
-                    <td>{friend?.name}</td>
-                    <td>{friend?.email}</td>
-                    <td>
-                      <Button
-                        variant="outline-danger"
-                        onClick={() => {
-                          dispatch(friendActions.cancelRequest(friend._id));
-                        }}
-                      >
-                        {" "}
-                        <FontAwesomeIcon icon={faTimes} /> Cancel Request{" "}
-                      </Button>
-                    </td>
+                    <th>Avatar</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </Tab>
-        <Tab eventKey="received" title="Received Requests">
-          <Table striped bordered hover variant="dark">
-            <thead>
-              <tr>
-                <th>Avatar</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allFriend?.map((friend) => {
-                return (
+                </thead>
+                <tbody>
+                  {allFriend?.map((friend) => {
+                    return (
+                      <tr>
+                        <td>
+                          <img
+                            src={`${
+                              !friend.avatarUrl
+                                ? defaultAvatar
+                                : friend.avatarUrl
+                            }`}
+                            style={{ borderRadius: "50%", height: "70px" }}
+                          />
+                        </td>
+                        <td>{friend?.name}</td>
+                        <td>{friend?.email}</td>
+                        <td>
+                          <Button
+                            variant="outline-danger"
+                            onClick={() => {
+                              dispatch(friendActions.cancelRequest(friend._id));
+                            }}
+                          >
+                            {" "}
+                            <FontAwesomeIcon icon={faTimes} /> Cancel Request{" "}
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </Tab>
+            <Tab eventKey="received" title="Received Requests">
+              <Table striped bordered hover variant="dark">
+                <thead>
                   <tr>
-                    <td>
-                      <img
-                        src={`${
-                          !friend.avatarUrl ? defaultAvatar : friend.avatarUrl
-                        }`}
-                        style={{ borderRadius: "50%", height: "70px" }}
-                      />
-                    </td>
-                    <td>{friend?.name}</td>
-                    <td>{friend?.email}</td>
-                    <td>
-                      <Button
-                        variant="outline-success"
-                        onClick={() => {
-                          dispatch(friendActions.acceptRequest(friend._id));
-                        }}
-                      >
-                        {" "}
-                        <FontAwesomeIcon icon={faUserCheck} /> Accept{" "}
-                      </Button>
-                      <Button
-                        variant="outline-warning"
-                        onClick={() => {
-                          dispatch(friendActions.declineRequest(friend._id));
-                        }}
-                      >
-                        {" "}
-                        <FontAwesomeIcon icon={faTimes} /> Decline{" "}
-                      </Button>
-                    </td>
+                    <th>Avatar</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </Tab>
-        <Tab eventKey="friends" title="My Friends">
-          <Table striped bordered hover variant="dark">
-            <thead>
-              <tr>
-                <th>Avatar</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allFriend?.map((friend) => {
-                return (
+                </thead>
+                <tbody>
+                  {allFriend?.map((friend) => {
+                    return (
+                      <tr>
+                        <td>
+                          <img
+                            src={`${
+                              !friend.avatarUrl
+                                ? defaultAvatar
+                                : friend.avatarUrl
+                            }`}
+                            style={{ borderRadius: "50%", height: "70px" }}
+                          />
+                        </td>
+                        <td>{friend?.name}</td>
+                        <td>{friend?.email}</td>
+                        <td>
+                          <Button
+                            variant="outline-success"
+                            onClick={() => {
+                              dispatch(friendActions.acceptRequest(friend._id));
+                            }}
+                          >
+                            {" "}
+                            <FontAwesomeIcon icon={faUserCheck} /> Accept{" "}
+                          </Button>
+                          <Button
+                            variant="outline-warning"
+                            onClick={() => {
+                              dispatch(
+                                friendActions.declineRequest(friend._id)
+                              );
+                            }}
+                          >
+                            {" "}
+                            <FontAwesomeIcon icon={faTimes} /> Decline{" "}
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </Tab>
+            <Tab eventKey="friends" title="My Friends">
+              <Table striped bordered hover variant="dark">
+                <thead>
                   <tr>
-                    <td>
-                      <img
-                        src={`${
-                          !friend.avatarUrl ? defaultAvatar : friend.avatarUrl
-                        }`}
-                        style={{ borderRadius: "50%", height: "70px" }}
-                      />
-                    </td>
-                    <td>{friend?.name}</td>
-                    <td>{friend?.email}</td>
-                    <td>
-                      {" "}
-                      <Button
-                        variant="outline-danger"
-                        onClick={() => {
-                          dispatch(friendActions.deleteFriend(friend._id));
-                        }}
-                      >
-                        {" "}
-                        <FontAwesomeIcon icon={faTrashAlt} /> Delete{" "}
-                      </Button>
-                    </td>
+                    <th>Avatar</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </Tab>
-        <Tab eventKey="home" title="Go Home" />
-      </Tabs>
-      <PaginationBar
-        pageNum={pageNum}
-        setPageNum={setPageNum}
-        totalPageNum={totalPageNum}
-      />
+                </thead>
+                <tbody>
+                  {allFriend?.map((friend) => {
+                    return (
+                      <tr>
+                        <td>
+                          <img
+                            src={`${
+                              !friend.avatarUrl
+                                ? defaultAvatar
+                                : friend.avatarUrl
+                            }`}
+                            style={{ borderRadius: "50%", height: "70px" }}
+                          />
+                        </td>
+                        <td>{friend?.name}</td>
+                        <td>{friend?.email}</td>
+                        <td>
+                          {" "}
+                          <Button
+                            variant="outline-danger"
+                            onClick={() => {
+                              dispatch(friendActions.deleteFriend(friend._id));
+                            }}
+                          >
+                            {" "}
+                            <FontAwesomeIcon icon={faTrashAlt} /> Delete{" "}
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </Tab>
+            <Tab eventKey="home" title="Go Home" />
+          </Tabs>
+          <PaginationBar
+            pageNum={pageNum}
+            setPageNum={setPageNum}
+            totalPageNum={totalPageNum}
+          />
+        </div>
+      )}
     </>
   );
 };
