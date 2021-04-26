@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { authActions } from "../redux/actions/auth.actions";
 import { routeActions } from "../redux/actions/route.actions";
+// import { toast } from "react-toastify";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -41,16 +42,17 @@ const RegisterPage = () => {
   }, [redirectTo, history, dispatch]);
 
   return (
-    <div className="pages">
-      <h1>Register page</h1>
+    <div className="text-center login-box">
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formBasicName">
-          <Form.Label>Username</Form.Label>
+        <h3>REGISTER</h3>
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>User Name</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter name"
+            placeholder="Your name"
             name="name"
             onChange={handleChange}
+            style={{ width: "300px" }}
           />
         </Form.Group>
 
@@ -62,9 +64,6 @@ const RegisterPage = () => {
             name="email"
             onChange={handleChange}
           />
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-          </Form.Text>
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">
@@ -77,21 +76,21 @@ const RegisterPage = () => {
           />
         </Form.Group>
 
-        <Form.Group controlId="formBasicPassword2">
+        <Form.Group controlId="formBasicPassword">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Confirm Password"
+            placeholder="Confirm password"
             name="password2"
             onChange={handleChange}
           />
         </Form.Group>
 
-        <Form.Group controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
-        </Form.Group>
-
-        <Button variant="primary" type="submit">
+        <Button
+          variant="success"
+          type="submit"
+          style={{ width: "100px", marginTop: "20px" }}
+        >
           Submit
         </Button>
       </Form>

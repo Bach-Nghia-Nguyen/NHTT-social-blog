@@ -12,23 +12,35 @@ const initialState = {
 const blogReducers = (state = initialState, action) => {
   const { type, payload } = action;
 
+  // GET_BLOGS, GET_BLOG_DETAIL, SEND_REACTION, CREATE_REVIEW
+
   switch (type) {
     case types.GET_BLOGS_REQUEST:
     case types.GET_BLOG_DETAIL_REQUEST:
+    case types.DELETE_BLOG_REQUEST:
       state.loading = true;
       state.error = null;
       break;
 
     case types.SEND_REACTION_REQUEST:
+    case types.CREATE_REVIEW_REQUEST:
       state.submitLoading = true;
+      state.error = null;
       break;
 
     case types.GET_BLOGS_SUCCESS:
+      state.blogs = payload.blogs;
+      state.totalPageNum = payload.totalPages;
       state.loading = false;
       break;
 
     case types.GET_BLOG_DETAIL_SUCCESS:
       state.selectedBlog = payload;
+      state.loading = false;
+      break;
+
+    case types.DELETE_BLOG_SUCCESS:
+      state.selectedBlog = {};
       state.loading = false;
       break;
 
@@ -38,15 +50,28 @@ const blogReducers = (state = initialState, action) => {
       break;
 
     case types.REVIEW_REACTION_SUCCESS:
+      state.selectedBlog = {
+        ...state.selectedBlog,
+        reviews: [
+          ...state.selectedBlog.reviews.map((review) => {
+            if (review._id !== payload.review_id) return review;
+            return { ...review, reactions: payload.reactions };
+          }),
+        ],
+      };
+      state.submitLoading = false;
       break;
 
     case types.GET_BLOGS_FAILURE:
     case types.GET_BLOG_DETAIL_FAILURE:
+    case types.DELETE_BLOG_FAILURE:
       state.error = payload;
       state.loading = false;
       break;
 
     case types.SEND_REACTION_FAILURE:
+    case types.CREATE_REVIEW_FAILURE:
+      state.error = payload;
       state.submitLoading = false;
       break;
 

@@ -5,6 +5,7 @@ const initialState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  accessToken: localStorage.getItem("accessToken"),
 };
 
 const authReducers = (state = initialState, action) => {
@@ -14,12 +15,14 @@ const authReducers = (state = initialState, action) => {
     case types.LOGIN_REQUEST:
     case types.REGISTER_REQUEST:
       state.loading = true;
+      state.error = null;
       break;
 
     case types.LOGIN_SUCCESS:
-      state.user = payload;
+      localStorage.setItem("accessToken", payload.accessToken);
+      state.user = { ...payload.data };
+      state.accessToken = payload.accessToken;
       state.isAuthenticated = true;
-      state.error = null;
       state.loading = false;
       break;
 
@@ -36,6 +39,7 @@ const authReducers = (state = initialState, action) => {
       break;
 
     case types.REGISTER_FAILURE:
+      state.error = payload;
       state.loading = false;
       break;
 

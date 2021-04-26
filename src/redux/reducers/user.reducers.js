@@ -5,7 +5,7 @@ const initialState = {
 };
 
 const userReducers = (state = initialState, action) => {
-  const { type, payload } = action;
+  const { type } = action;
 
   switch (type) {
     case types.GET_USERS_REQUEST:

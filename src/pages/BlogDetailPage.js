@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { blogActions } from "../redux/actions/blog.actions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Moment from "react-moment";
@@ -10,6 +10,7 @@ import Markdown from "react-markdown";
 import Loader from "../components/Loader";
 import Reactions from "../components/Reactions";
 import Reviews from "../components/Reviews";
+import ReviewForm from "../components/ReviewForm";
 
 const BlogDetailPage = () => {
   const params = useParams();
@@ -19,6 +20,21 @@ const BlogDetailPage = () => {
 
   const blog = useSelector((state) => state.blog.selectedBlog);
   const loading = useSelector((state) => state.blog.loading);
+  const currentUser = useSelector((state) => state.auth.user);
+  const submitLoading = useSelector((state) => state.blog.submitLoading);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  const [reviewText, setReviewText] = useState("");
+
+  const handleInputChange = (e) => {
+    setReviewText(e.target.value);
+  };
+
+  const handleReviewSubmit = (e) => {
+    e.preventDefault();
+    dispatch(blogActions.createReview(id, reviewText));
+    setReviewText("");
+  };
 
   const handleGoBack = (e) => {
     history.goBack();
@@ -26,6 +42,7 @@ const BlogDetailPage = () => {
 
   useEffect(() => {
     if (id) {
+      console.log("hellooo");
       dispatch(blogActions.getSingleBlog(id));
     }
   }, [dispatch, id]);
@@ -40,6 +57,15 @@ const BlogDetailPage = () => {
         </Button>
 
         {/* Blog Edit button goes here */}
+        {blog?._id && currentUser?._id === blog?.author?._id ? (
+          <Link to={`/blog/edit/${blog._id}`}>
+            <Button variant="success">
+              <FontAwesomeIcon icon="edit" size="1x" /> Edit
+            </Button>
+          </Link>
+        ) : (
+          <></>
+        )}
       </div>
 
       {/* Blog detail section */}
@@ -76,10 +102,18 @@ const BlogDetailPage = () => {
               <Reviews reviews={blog.reviews} />
             </div>
           )}
+
+          {/* Review Creation Form*/}
+          {isAuthenticated && (
+            <ReviewForm
+              reviewText={reviewText}
+              handleInputChange={handleInputChange}
+              handleReviewSubmit={handleReviewSubmit}
+              loading={submitLoading}
+            />
+          )}
         </>
       )}
-
-      {/* Review Creation Form goes here */}
     </div>
   );
 };

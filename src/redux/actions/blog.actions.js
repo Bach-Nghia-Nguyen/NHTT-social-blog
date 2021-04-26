@@ -1,12 +1,22 @@
 import * as types from "../constants/blog.constants";
 import api from "../../apiService";
+import { routeActions } from "./route.actions";
+import { toast } from "react-toastify";
 
-const getBlogs = () => async (dispatch) => {};
+const getBlogs = (pageNum) => async (dispatch) => {
+  dispatch({ type: types.GET_BLOGS_REQUEST, payload: null });
+  try {
+    const res = await api.get(`/blogs?page=${pageNum}`);
+    console.log(res);
+    dispatch({ type: types.GET_BLOGS_SUCCESS, payload: res.data.data });
+  } catch (error) {
+    dispatch({ type: types.GET_BLOGS_FAILURE, payload: null });
+  }
+};
 
 const getSingleBlog = (blog_id) => async (dispatch) => {
+  dispatch({ type: types.GET_BLOG_DETAIL_REQUEST, payload: null });
   try {
-    dispatch({ type: types.GET_BLOG_DETAIL_REQUEST, payload: null });
-
     let url = `/blogs/${blog_id}`;
     const response = await api.get(url);
 
@@ -19,19 +29,40 @@ const getSingleBlog = (blog_id) => async (dispatch) => {
   }
 };
 
-const createReview = () => (dispatch) => {};
+const createReview = (blog_id, reviewText) => async (dispatch) => {
+  dispatch({ type: types.CREATE_REVIEW_REQUEST, payload: null });
+  try {
+    const response = await api.post(`/reviews/blogs/${blog_id}`, {
+      content: reviewText,
+    });
+    const data = response.data.data;
+    dispatch({ type: types.CREATE_REVIEW_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: types.CREATE_REVIEW_FAILURE, payload: error.message });
+  }
+};
 
 const createBlog = () => (dispatch) => {};
 
 const updateBlog = () => (dispatch) => {};
 
-const deleteBlog = () => (dispatch) => {};
+const deleteBlog = (blog_id) => async (dispatch) => {
+  dispatch({ type: types.DELETE_BLOG_REQUEST, payload: null });
+  try {
+    const response = await api.delete(`/blogs/${blog_id}`);
+    dispatch({ type: types.DELETE_BLOG_SUCCESS, payload: response.data });
+    dispatch(routeActions.redirect("__GO_BACK__"));
+    toast.success("The blog has been deleted!");
+  } catch (error) {
+    dispatch({ type: types.DELETE_BLOG_SUCCESS, payload: error.message });
+  }
+};
 
 const sendEmojiReaction = ({ targetType, target_id, emoji }) => async (
   dispatch
 ) => {
+  dispatch({ type: types.SEND_REACTION_REQUEST, payload: null });
   try {
-    dispatch({ type: types.SEND_REACTION_REQUEST, payload: null });
     const response = await api.post(`/reactions`, {
       targetType,
       target_id,
